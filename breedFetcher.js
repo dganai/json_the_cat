@@ -7,14 +7,22 @@ const url = (`https://api.thecatapi.com/v1/breeds/search?q=${arg[0]}`);
 
 request(url, (err, res, body) => {
     
-  if (err) {
-    return console.log(err);
+  if (res.statusCode !== 200) {
+    console.log(err);
+    return;
   }
   
-  
-  const data = JSON.parse(body);
-  if (data.length === 0) {
-    return console.log(data[0]);
+  if (body === '[]') {
+    console.log('Breed does not exist. Try again.');
+    return;
+  }
+
+  if (!err && res.statusCode === 200) {
+    const data = JSON.parse(body);
+    if (data.length === 0) {
+      console.log(data[0]);
+      return;
+    }
   }
   
   
