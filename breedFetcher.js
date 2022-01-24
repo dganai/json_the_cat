@@ -1,40 +1,34 @@
 const request = require('request'); // request data from api breed search
-const arg = process.argv.slice(2);
-const url = (`https://api.thecatapi.com/v1/breeds/search?q=${arg[0]}`);
+
 
 // print out the body content to the terminal
 // fetch siberian data from the api endpoint using request
+const fetchBreedDescription =  (breedName, callback) => {
 
-request(url, (err, res, body) => {
+  request(`https://api.thecatapi.com/v1/breeds/search?q=${breedName}`, (err, res, body) => {
     
-  if (res.statusCode !== 200) {
-    console.log(err);
-    return;
-  }
-  
-  if (body === '[]') {
-    console.log('Breed does not exist. Try again.');
-    return;
-  }
-
-  if (!err && res.statusCode === 200) {
-    const data = JSON.parse(body);
-    if (data.length === 0) {
-      console.log(data[0]);
+    if (err) {
+      callback(err, null);
       return;
     }
-  }
-  
-  
+    const data = JSON.parse(body);
+
+    if (!data[0]) {
+      callback('Breed does not exist. Try again.', null);
+      return;
+    }
+      
+      callback(null, data[0].description);
+      
     
+    }
 
-  console.log(data[0]);
-});
+  )
+
+};
 
 
-
-
-
+module.exports = { fetchBreedDescription };
 
 
 
